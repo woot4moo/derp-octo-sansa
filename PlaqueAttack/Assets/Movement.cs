@@ -10,7 +10,8 @@ public class Movement : MonoBehaviour
 	KeyCode up = KeyCode.W;
 	KeyCode down = KeyCode.S;
 	Quaternion targetRotation = new Quaternion ();
-	float speed = .5f;
+	float forwardSpeed = 20.0f;
+	float rotationSpeed = .5f;
 
 	// Use this for initialization
 	void Start ()
@@ -23,8 +24,8 @@ public class Movement : MonoBehaviour
 	void Update ()
 	{
 		//Regular model movement
-		Vector3 forwardSpeed = transform.forward * Time.deltaTime;
-		transform.Translate (forwardSpeed);
+		Vector3 forwardVector = transform.forward * Time.deltaTime;
+		transform.Translate (forwardVector * forwardSpeed);
 		
 		//controls for model
 		if (Input.GetKey (left)) {
@@ -47,7 +48,7 @@ public class Movement : MonoBehaviour
 				transform.position);
 		}
 		transform.rotation = Quaternion.Slerp 
-	(transform.rotation, targetRotation, Time.deltaTime * speed);
+	(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
 
 	}
 	
