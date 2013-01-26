@@ -9,6 +9,9 @@ public class Movement : MonoBehaviour
 	KeyCode right = KeyCode.D;
 	KeyCode up = KeyCode.W;
 	KeyCode down = KeyCode.S;
+	Quaternion targetRotation = new Quaternion ();
+	float speed = .5f;
+
 	// Use this for initialization
 	void Start ()
 	{
@@ -20,8 +23,8 @@ public class Movement : MonoBehaviour
 	void Update ()
 	{
 		//Regular model movement
-		Vector3 forwardSpeed = transform.forward * Time.deltaTime;
-		transform.Translate (forwardSpeed);
+		//Vector3 forwardSpeed = transform.forward * Time.deltaTime;
+		//transform.Translate (forwardSpeed);
 		
 		//controls for model
 		if (Input.GetKey (left)) {
@@ -40,7 +43,22 @@ public class Movement : MonoBehaviour
 			transform.Translate (-transform.up * Time.deltaTime);
 		}
 	
-		Debug.Log(Input.mousePosition);
+		//Debug.Log (Input.mousePosition);
+		Ray ray = Camera.main.ScreenPointToRay (Input.mousePosition);
+		RaycastHit hit;
+		if (Physics.Raycast (ray, out hit, 1200)) {
+			Debug.DrawLine (ray.origin, hit.point);
+			targetRotation = Quaternion.LookRotation (hit.point - 
+				transform.position);
+			Debug.Log(targetRotation);
+		}
+		//Vector3 current = Input.mousePosition;
+		//targetRotation.y=current.y;
+		//targetRotation.x=current.x;
+		//targetRotation.z=0;
+		transform.rotation = Quaternion.Slerp 
+	(transform.rotation, targetRotation, Time.deltaTime * speed);
+
 	}
 }
 
