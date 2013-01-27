@@ -20,21 +20,29 @@ public class Clock : MonoBehaviour
 	
 	private float animLength;
 	
+	private GameObject plaque;
+	
 	public GUIStyle style = new GUIStyle();
 
 	void Start ()
 	{
 		startTime = .01f;    
 		lastTime = 0.0f;
-		mvmt = (Movement)GameObject.FindGameObjectWithTag("Player").gameObject.GetComponent ("Movement");
+		mvmt = (Movement)gameObject.GetComponent ("Movement");
 		pulsers = GameObject.FindGameObjectsWithTag("Pulsing");
 		animLength = pulsers[0].animation.clip.length;
+		plaque = GameObject.Find("plaque");
+	}
+	
+	public void Reset() {
+		startTime = 0.1f;
+		lastTime = 0.0f;
 	}
  
 	void Update ()
 	{
 		if (startTime > 0) {
-			elapsedTime = Time.time - startTime;
+			elapsedTime = Time.timeSinceLevelLoad - startTime;
 			
 			bool changeSpeed = false;
 			
@@ -44,11 +52,11 @@ public class Clock : MonoBehaviour
 			}
 			
 			if (beats < elapsedTime - lastTime) {
-				if (!gameObject.audio.isPlaying) {
+				if (!plaque.audio.isPlaying) {
 				foreach (GameObject obj in pulsers) {
 					if (changeSpeed) {
 						foreach (AnimationState state in obj.animation) {;
-							if (beats < 10 * Mathf.Epsilon) {
+							if (beats < 0.01) {
 								state.speed = 8;	
 								animLength = state.length / state.speed;
 							} else {
@@ -60,7 +68,7 @@ public class Clock : MonoBehaviour
 					obj.animation.Play("Pulse");
 				}
 				
-					gameObject.audio.Play();
+					plaque.audio.Play();
 				}
 				lastTime = elapsedTime;
 				numOfBeats++;
@@ -69,15 +77,10 @@ public class Clock : MonoBehaviour
 			if (beatSpeed == numOfBeats) {
 				numOfBeats = 0;
 				mvmt.forwardSpeed = Mathf.Min(mvmt.forwardSpeed * 1.5f, maxForwardSpeed);
-				mvmt.turnSpeed = Mathf.Min(mvmt.turnSpeed * 1.5f, maxturnSpeed);
+				mvmt.turnSpeed = Mathf.Min(mvmt.turnSpeed * 1.25f, maxturnSpeed);
 				beats = Mathf.Max(beats/2, Mathf.Epsilon);
 			}
 		}
-	}
- 
-	void OnTriggerExit ()
-	{
-		startTime = 0;
 	}
  
 	void OnGUI ()
