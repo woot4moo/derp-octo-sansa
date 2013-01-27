@@ -4,17 +4,18 @@ using System.Collections;
 public class CameraFollow : MonoBehaviour
 {
 	GameObject plaque;
-		
+	Vector3 offset = new Vector3(0, 7, -20);	
+	
 	void Start ()
 	{
-		plaque = GameObject.Find("plaque");
+		plaque = GameObject.FindGameObjectWithTag("Player");
 	}
 	
-	void Update() 
+	void LateUpdate() 
 	{
 		
-		transform.position = plaque.transform.position + transform.up * 4;// - (plaque.transform.position - transform.position).normalized * 10;
-		transform.LookAt(plaque.transform.position);
+		transform.position = Vector3.Slerp(transform.position, plaque.transform.position + transform.rotation * offset, 10 * Time.deltaTime);
+		//transform.LookAt(plaque.transform.position);
 	}
 }
 

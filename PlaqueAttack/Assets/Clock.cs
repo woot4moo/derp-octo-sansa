@@ -13,6 +13,11 @@ public class Clock : MonoBehaviour
 	private Movement mvmt;
  
 	static string fmt = "0#";
+	
+	public float maxForwardSpeed = 50.0f;
+	public float maxturnSpeed = 5.0f;
+	
+	public GUIStyle style = new GUIStyle();
 
 	void Start ()
 	{
@@ -27,9 +32,7 @@ public class Clock : MonoBehaviour
 		if (startTime > 0) {
 			elapsedTime = Time.time - startTime;
 			
-			Debug.Log ("Elapsed: " + elapsedTime + " vs Last: " + lastTime);
 			if (beats < elapsedTime - lastTime) {
-				GameObject.FindGameObjectWithTag("Player").audio.Play();
 				foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Pulsing")) {
 					obj.animation.CrossFade("Pulse");
 				}
@@ -39,7 +42,8 @@ public class Clock : MonoBehaviour
 			
 			if (beatSpeed == numOfBeats) {
 				numOfBeats = 0;
-				mvmt.forwardSpeed = Mathf.Min(mvmt.forwardSpeed * 1.5f, 40.0f);
+				mvmt.forwardSpeed = Mathf.Min(mvmt.forwardSpeed * 1.5f, maxForwardSpeed);
+				mvmt.turnSpeed = Mathf.Min(mvmt.turnSpeed * 1.5f, maxturnSpeed);
 				beats /= 2;
 			}
 		}
@@ -54,6 +58,6 @@ public class Clock : MonoBehaviour
 	{
 		GUI.Label (new Rect (10, 0, 100, 20),
 			(string.Format ("{0,2:" + fmt+"}:{1,2:" + fmt+"}", (int)elapsedTime / 60, 
-						   (int)elapsedTime % 60)));
+						   (int)elapsedTime % 60)), style);
 	}
 }
