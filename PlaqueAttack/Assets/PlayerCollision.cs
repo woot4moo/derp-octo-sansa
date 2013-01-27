@@ -15,7 +15,6 @@ public class PlayerCollision : MonoBehaviour
 	}
 	
 	void Update() {
-		Debug.Log(body.velocity);
 		body.transform.position += body.velocity * Time.deltaTime;	
 	}
 	
