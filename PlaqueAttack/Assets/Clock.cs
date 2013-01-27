@@ -29,6 +29,7 @@ public class Clock : MonoBehaviour
 			
 			Debug.Log ("Elapsed: " + elapsedTime + " vs Last: " + lastTime);
 			if (beats < elapsedTime - lastTime) {
+				GameObject.FindGameObjectWithTag("Player").audio.Play();
 				foreach (GameObject obj in GameObject.FindGameObjectsWithTag("Pulsing")) {
 					obj.animation.CrossFade("Pulse");
 				}
